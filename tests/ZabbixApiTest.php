@@ -26,7 +26,7 @@ final class ZabbixApiTest extends TestCase
         $this->assertSame('http://localhost/api_jsonrpc.php', $zabbix->getApiUrl());
     }
 
-    public function testZabbixApiHostGet()
+    public function testZabbixApiGetHost()
     {
         $zabbix = new ZabbixApi('http://localhost/api_jsonrpc.php', 'Admin', 'zabbix');
         $result = $zabbix->hostGet(array(
