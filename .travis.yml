@@ -26,7 +26,8 @@ before_install:
       mkdir -p /opt/zabbix
       wget -qO- "https://github.com/zabbix/zabbix/archive/${ZABBIX_VERSION}.tar.gz" | tar xvz -C /opt/zabbix
       ln -s /opt/zabbix/zabbix-$ZABBIX_VERSION/frontends/php/ /opt/zabbix/frontend
-      php -S 0.0.0.0:8080 -t /opt/zabbix/frontend & sleep 1
+      php -S 0.0.0.0:8080 -t /opt/zabbix/frontend &
+      echo "$!" > /opt/zabbix/frontend.pid
       wget -qO- "http://localhost/"
 
 install:
