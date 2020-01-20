@@ -24,7 +24,7 @@ before_install:
       # General configuration
       stty cols 120
       mkdir -p /opt/zabbix
-      wget -qO- wget -qO- https://repo.zabbix.com/zabbix/${ZABBIX_VERSION%.*}/ubuntu/pool/main/z/zabbix/zabbix_${ZABBIX_VERSION}.orig.tar.gz | tar xvzf - -C /opt/zabbix zabbix-${ZABBIX_VERSION}/frontends/php zabbix-${ZABBIX_VERSION}/database/sqlite3/ zabbix-${ZABBIX_VERSION}/tests/
+      wget -qO- wget -qO- https://repo.zabbix.com/zabbix/${ZABBIX_VERSION%.*}/ubuntu/pool/main/z/zabbix/zabbix_${ZABBIX_VERSION}.orig.tar.gz | tar xvzf - -C /opt/zabbix zabbix-${ZABBIX_VERSION}/frontends/php zabbix-${ZABBIX_VERSION}/database/sqlite3/
       ln -s /opt/zabbix/zabbix-$ZABBIX_VERSION/frontends/php/ /opt/zabbix/frontend
     - |
       # Configurar servidor php-fpm
@@ -50,10 +50,8 @@ before_install:
       # Configuración de base de datos
       sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/database/sqlite3/schema.sql
       sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/database/sqlite3/data.sql
-      sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/tests/data/data_test.sql
       sqlite3 /opt/zabbix/zabbix.db 'SELECT * FROM users'
-      cp /opt/zabbix/zabbix-$ZABBIX_VERSION/tests/templates/zabbix.conf.php /opt/zabbix/frontend/conf/
-      sed -i 's?{DBNAME}?/opt/zabbix/zabbix.db?; s?{DBTYPE}?SQLITE3?; ' /opt/zabbix/frontend/conf/zabbix.conf.php
+      echo -e '<?php\nglobal $DB;\n$DB["TYPE"] = "SQLITE3";\n$DB["DATABASE"] = "/opt/zabbix/zabbix.db";\n$ZBX_SERVER = "PhpZabbixApi";\n$ZBX_SERVER_PORT = "10051";\n$ZBX_SERVER_NAME = "Test Server";\nIMAGE_FORMAT_DEFAULT	= IMAGE_FORMAT_PNG;\n' > /opt/zabbix/frontend/conf/zabbix.conf.php
       cat /opt/zabbix/frontend/conf/zabbix.conf.php
       wget -qO- "http://localhost/"
 
