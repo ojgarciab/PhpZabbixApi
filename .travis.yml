@@ -29,7 +29,6 @@ before_install:
     - |
       # Configurar servidor php-fpm
       sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
-      sudo a2enmod rewrite actions fastcgi alias
       echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
       sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
       sudo chown -R travis:travis /var/lib/apache2/fastcgi
@@ -37,7 +36,10 @@ before_install:
     - |
       # Configurar servidor Apache
       sudo apt-get update
-      sudo apt-get install apache2 libapache2-mod-fastcgi
+      sudo apt-get install apache2
+      ls -ltr /etc/apache2/mods-enabled
+      sudo a2enmod rewrite actions proxy proxy_fcgi fastcgi alias
+      ls -ltr /etc/apache2/mods-enabled
       cat /etc/apache2/sites-available/000-default.conf
       wget -qO- "http://localhost/"
       echo "OK"
