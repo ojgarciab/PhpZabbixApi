@@ -56,4 +56,4 @@ install:
     - composer install --prefer-dist --optimize-autoloader --classmap-authoritative --no-interaction --no-scripts
 
 script:
-    - ./vendor/bin/phpunit
+    - ./vendor/bin/phpunit --testdox
