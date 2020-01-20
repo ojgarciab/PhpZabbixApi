@@ -1,7 +1,7 @@
 language: php
 
 dist: bionic
-sudo: false
+sudo: true
 
 git:
     depth: 1
@@ -26,8 +26,19 @@ before_install:
       mkdir -p /opt/zabbix
       wget -qO- wget -qO- https://repo.zabbix.com/zabbix/${ZABBIX_VERSION%.*}/ubuntu/pool/main/z/zabbix/zabbix_${ZABBIX_VERSION}.orig.tar.gz | tar xvzf - -C /opt/zabbix zabbix-${ZABBIX_VERSION}/frontends/php
       ln -s /opt/zabbix/zabbix-$ZABBIX_VERSION/frontends/php/ /opt/zabbix/frontend
-      #php -S 0.0.0.0:8080 -t /opt/zabbix/frontend &
-      #echo "$!" > /opt/zabbix/frontend.pid
+    - |
+      # Configurar servidor php-fpm
+      sudo cp ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf.default ~/.phpenv/versions/$(phpenv version-name)/etc/php-fpm.conf
+      sudo a2enmod rewrite actions fastcgi alias
+      echo "cgi.fix_pathinfo = 1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+      sudo sed -i -e "s,www-data,travis,g" /etc/apache2/envvars
+      sudo chown -R travis:travis /var/lib/apache2/fastcgi
+      ~/.phpenv/versions/$(phpenv version-name)/sbin/php-fpm
+    - |
+      # Configurar servidor Apache
+      sudo apt-get update
+      sudo apt-get install apache2 libapache2-mod-fastcgi
+      cat /etc/apache2/sites-available/000-default.conf
       wget -qO- "http://localhost/"
       echo "OK"
 
