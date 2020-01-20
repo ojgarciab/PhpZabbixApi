@@ -19,16 +19,29 @@ final class ZabbixApiTest extends TestCase
         $this->assertGreaterThanOrEqual(405, $rc->getMethods(\ReflectionMethod::IS_PUBLIC));
     }
 
+    /**
+     * @expectedException ZabbixApi\Exception
+     * @expectedExceptionMessage Could not connect to "http://not.found.tld/api_jsonrpc.php"
+     */
+    public function testZabbixApiConnectionError()
+    {
+        new ZabbixApi('http://not.found.tld/api_jsonrpc.php', 'zabbix', 'very_secret_pass');
+    }
+ 
+
     public function testZabbixApiConnectionNotTriggered()
     {
         $zabbix = new ZabbixApi('http://localhost/api_jsonrpc.php', 'Admin', 'zabbix');
 
         $this->assertSame('http://localhost/api_jsonrpc.php', $zabbix->getApiUrl());
+        return $zabbix; 
     }
 
-    public function testZabbixApiGetHost()
+    /**
+     * @depends testZabbixApiConnectionNotTriggered
+     */
+    public function testZabbixApiGetHost($zabbix)
     {
-        $zabbix = new ZabbixApi('http://localhost/api_jsonrpc.php', 'Admin', 'zabbix');
         $result = $zabbix->hostGet(array(
             'output' => 'extend',
             'search' => array(
@@ -41,12 +54,4 @@ final class ZabbixApiTest extends TestCase
         $this->assertSame('Zabbix server', $result[0]->name);
     }
 
-    /**
-     * @expectedException ZabbixApi\Exception
-     * @expectedExceptionMessage Could not connect to "http://not.found.tld/api_jsonrpc.php"
-     */
-    public function testZabbixApiConnectionError()
-    {
-        new ZabbixApi('http://not.found.tld/api_jsonrpc.php', 'zabbix', 'very_secret_pass');
-    }
-}
+ }
