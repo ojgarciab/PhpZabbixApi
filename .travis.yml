@@ -46,16 +46,16 @@ before_install:
       wget -qO- "http://localhost/"
       echo "OK"
 
-      - |
-        # Configuración de base de datos
-        sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/database/sqlite3/schema.sql
-        sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/database/sqlite3/data.sql
-        sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/tests/data/data_test.sql
-        sqlite3 /opt/zabbix/zabbix.db 'SELECT * FROM users'
-        cp /opt/zabbix/zabbix-$ZABBIX_VERSION/zabbix-2.2.23/tests/templates/zabbix.conf.php /opt/zabbix/frontend/conf/
-        sed -i 's?{DBNAME}?/opt/zabbix/zabbix.db?; s?{DBTYPE}?SQLITE3?; ' /opt/zabbix/frontend/conf/zabbix.conf.php
-        cat /opt/zabbix/frontend/conf/zabbix.conf.php
-        wget -qO- "http://localhost/"
+    - |
+      # Configuración de base de datos
+      sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/database/sqlite3/schema.sql
+      sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/database/sqlite3/data.sql
+      sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/tests/data/data_test.sql
+      sqlite3 /opt/zabbix/zabbix.db 'SELECT * FROM users'
+      cp /opt/zabbix/zabbix-$ZABBIX_VERSION/zabbix-2.2.23/tests/templates/zabbix.conf.php /opt/zabbix/frontend/conf/
+      sed -i 's?{DBNAME}?/opt/zabbix/zabbix.db?; s?{DBTYPE}?SQLITE3?; ' /opt/zabbix/frontend/conf/zabbix.conf.php
+      cat /opt/zabbix/frontend/conf/zabbix.conf.php
+      wget -qO- "http://localhost/"
 
 
 install:
