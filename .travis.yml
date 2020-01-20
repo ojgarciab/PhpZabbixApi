@@ -40,7 +40,7 @@ before_install:
       ls -ltr /etc/apache2/mods-enabled
       sudo a2enmod rewrite actions proxy proxy_fcgi fastcgi alias
       ls -ltr /etc/apache2/mods-enabled
-      sudo sed -ri 's#DocumentRoot /var/www/html#s#DocumentRoot /opt/zabbix/frontend/#; s#(</VirtualHost>)#\tProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000/opt/zabbix/frontend/$1\n\t<Directory "/opt/zabbix/frontend">\n\t\tRequire all granted\n\t\tAllowOverride All\n\t</Directory>\n\1#' /etc/apache2/sites-available/000-default.conf
+      sudo sed -ri 's#DocumentRoot /var/www/html#DocumentRoot /opt/zabbix/frontend/#; s#(</VirtualHost>)#\tProxyPassMatch ^/(.*\.php(/.*)?)$ fcgi://127.0.0.1:9000/opt/zabbix/frontend/$1\n\t<Directory "/opt/zabbix/frontend">\n\t\tRequire all granted\n\t\tAllowOverride All\n\t</Directory>\n\1#' /etc/apache2/sites-available/000-default.conf
       cat /etc/apache2/sites-available/000-default.conf
       sudo systemctl restart apache2
       wget -qO- "http://localhost/"
