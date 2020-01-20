@@ -8,99 +8,12 @@ git:
 
 php:
     - 7.1
-    - 7.2
-    - 7.3
-    - 7.4
 
 env:
-    - ZABBIX_VERSION=2.4.0
-    - ZABBIX_VERSION=2.4.8
-    - ZABBIX_VERSION=3.0.0
-    - ZABBIX_VERSION=3.4.15
-    - ZABBIX_VERSION=4.0.0
-    - ZABBIX_VERSION=4.4.4
+    - ZABBIX_VERSION=2.2.23
 
 jobs:
     fast_finish: true
-    include:
-        - php: 5.3
-          dist: precise
-          env: ZABBIX_VERSION=2.4.0
-        - php: 5.3
-          dist: precise
-          env: ZABBIX_VERSION=2.4.8
-        - php: 5.4
-          dist: trusty
-          env: ZABBIX_VERSION=2.4.0
-        - php: 5.4
-          dist: trusty
-          env: ZABBIX_VERSION=2.4.8
-        - php: 5.4
-          dist: precise
-          env: ZABBIX_VERSION=3.0.0
-        - php: 5.4
-          dist: precise
-          env: ZABBIX_VERSION=3.4.15
-        - php: 5.4
-          dist: precise
-          env: ZABBIX_VERSION=4.0.0
-        - php: 5.4
-          dist: precise
-          env: ZABBIX_VERSION=4.4.4
-        - php: 5.5
-          dist: trusty
-          env: ZABBIX_VERSION=2.4.0
-        - php: 5.5
-          dist: trusty
-          env: ZABBIX_VERSION=2.4.8
-        - php: 5.5
-          dist: precise
-          env: ZABBIX_VERSION=3.0.0
-        - php: 5.5
-          dist: precise
-          env: ZABBIX_VERSION=3.4.15
-        - php: 5.5
-          dist: precise
-          env: ZABBIX_VERSION=4.0.0
-        - php: 5.5
-          dist: precise
-          env: ZABBIX_VERSION=4.4.4
-        - php: 5.6
-          dist: trusty
-          env: ZABBIX_VERSION=2.4.0
-        - php: 5.6
-          dist: trusty
-          env: ZABBIX_VERSION=2.4.8
-        - php: 5.6
-          dist: precise
-          env: ZABBIX_VERSION=3.0.0
-        - php: 5.6
-          dist: precise
-          env: ZABBIX_VERSION=3.4.15
-        - php: 5.6
-          dist: precise
-          env: ZABBIX_VERSION=4.0.0
-        - php: 5.6
-          dist: precise
-          env: ZABBIX_VERSION=4.4.4
-        - php: 7.0
-          dist: trusty
-          env: ZABBIX_VERSION=2.4.0
-        - php: 7.0
-          dist: trusty
-          env: ZABBIX_VERSION=2.4.8
-        - php: 7.0
-          dist: precise
-          env: ZABBIX_VERSION=3.0.0
-        - php: 7.0
-          dist: precise
-          env: ZABBIX_VERSION=3.4.15
-        - php: 7.0
-          dist: precise
-          env: ZABBIX_VERSION=4.0.0
-        - php: 7.0
-          dist: precise
-          env: ZABBIX_VERSION=4.4.4
 
 cache:
     directories:
@@ -111,8 +24,10 @@ before_install:
       # General configuration
       stty cols 120
       mkdir -p /opt/zabbix
-      wget -qO- https://repo.zabbix.com/zabbix/$(echo $ZABBIX_VERSION | cut -d. -f-2)/ubuntu/pool/main/z/zabbix/zabbix_$ZABBIX_VERSION.orig.tar.gz | tar xvz -C /opt/zabbix
+      wget -qO- "https://github.com/zabbix/zabbix/archive/${ZABBIX_VERSION}.tar.gz" | tar xvz -C /opt/zabbix
       ln -s /opt/zabbix/zabbix-$ZABBIX_VERSION/frontends/php/ /opt/zabbix/frontend
+      php -S 0.0.0.0:8080 -t /opt/zabbix/frontend & sleep 1
+      wget -qO- "http://localhost/"
 
 install:
     - php ./build/build.php
