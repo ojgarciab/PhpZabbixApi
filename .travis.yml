@@ -51,7 +51,7 @@ before_install:
       sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/database/sqlite3/schema.sql
       sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/database/sqlite3/data.sql
       sqlite3 /opt/zabbix/zabbix.db 'SELECT * FROM users'
-      echo -e '<?php\nglobal $DB;\n$DB["TYPE"] = "SQLITE3";\n$DB["DATABASE"] = "/opt/zabbix/zabbix.db";\n$ZBX_SERVER = "PhpZabbixApi";\n$ZBX_SERVER_PORT = "10051";\n$ZBX_SERVER_NAME = "Test Server";\nIMAGE_FORMAT_DEFAULT	= IMAGE_FORMAT_PNG;\n' > /opt/zabbix/frontend/conf/zabbix.conf.php
+      echo -e '<?php\nglobal $DB;\n$DB["TYPE"] = "SQLITE3";\n$DB["DATABASE"] = "/opt/zabbix/zabbix.db";\n$ZBX_SERVER = "PhpZabbixApi";\n$ZBX_SERVER_PORT = "10051";\n$ZBX_SERVER_NAME = "Test Server";\n$IMAGE_FORMAT_DEFAULT = IMAGE_FORMAT_PNG;\n' > /opt/zabbix/frontend/conf/zabbix.conf.php
       cat /opt/zabbix/frontend/conf/zabbix.conf.php
       wget -qO- "http://localhost/"
 
