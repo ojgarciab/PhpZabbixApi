@@ -46,6 +46,14 @@ before_install:
       wget -qO- "http://localhost/"
       echo "OK"
 
+      - |
+        # Configuración de base de datos
+        sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/database/sqlite3/schema.sql
+        sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/database/sqlite3/data.sql
+        sqlite3 /opt/zabbix/zabbix.db < /opt/zabbix/zabbix-$ZABBIX_VERSION/tests/data/data_test.sql
+        sqlite3 /opt/zabbix/zabbix.db 'SELECT * FROM users'
+
+
 install:
     - php ./build/build.php
     - composer install --prefer-dist --optimize-autoloader --classmap-authoritative --no-interaction --no-scripts
